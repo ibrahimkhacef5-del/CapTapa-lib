@@ -1070,9 +1070,5 @@ end
 -- إرجاع المكتبة
 -- ═══════════════════════════════════════════════════════════════════════
 return NovaUI
-LUAEOF
 
-echo ""
-echo "✅ تم إنشاء NovaUI.lua"
-echo "📁 المسار: ~/novaui/NovaUI.lua"
-wc -l NovaUI.lua
+
