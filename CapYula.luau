@@ -1,39 +1,36 @@
 --═════════════════════════════════════════════
--- NovaUI v3.0 - مكتبة واجهة احترافية لـ Roblox
+-- NovaUI v4.0 - مكتبة واجهة احترافية
 -- Author: ibrahimkhacef5-del
--- Version: 3.0.0
--- Features: Dropdown, Input, Keybind, iOS Slider, Advanced ColorPicker
+-- Version: 4.0.0
+-- Inspired by Rayfield (Apache 2.0)
 --═════════════════════════════════════════════
 
 local NovaUI = {}
 NovaUI.__index = NovaUI
-NovaUI.Version = "3.0.0"
+NovaUI.Version = "4.0.0"
 NovaUI._hasBooted = false
+NovaUI.Flags = {}
 
--- الخدمات
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 local Players = game:GetService("Players")
 local CoreGui = game:GetService("CoreGui")
-local RunService = game:GetService("RunService")
 
 local Player = Players.LocalPlayer
 
--- الإعدادات
 NovaUI.Config = {
-    WindowSize = UDim2.new(0, 540, 0, 440),
-    BackgroundImage = "",
-    BackgroundTransparency = 0.5,
+    WindowSize = UDim2.new(0, 600, 0, 400),
     ShowBootScreen = true,
     BootDuration = 1.5,
 }
 
--- الثيمات
+-- 12 ثيم
 NovaUI.Themes = {
     Dark = {
         Background = Color3.fromRGB(15, 15, 20),
         Card = Color3.fromRGB(25, 25, 35),
         TitleBar = Color3.fromRGB(30, 30, 45),
+        Sidebar = Color3.fromRGB(20, 20, 30),
         Text = Color3.fromRGB(255, 255, 255),
         SubText = Color3.fromRGB(180, 180, 200),
         Accent = Color3.fromRGB(120, 80, 255),
@@ -47,6 +44,7 @@ NovaUI.Themes = {
         Background = Color3.fromRGB(240, 240, 245),
         Card = Color3.fromRGB(255, 255, 255),
         TitleBar = Color3.fromRGB(230, 230, 240),
+        Sidebar = Color3.fromRGB(250, 250, 255),
         Text = Color3.fromRGB(20, 20, 30),
         SubText = Color3.fromRGB(100, 100, 120),
         Accent = Color3.fromRGB(80, 100, 220),
@@ -60,6 +58,7 @@ NovaUI.Themes = {
         Background = Color3.fromRGB(10, 25, 40),
         Card = Color3.fromRGB(20, 40, 60),
         TitleBar = Color3.fromRGB(15, 30, 50),
+        Sidebar = Color3.fromRGB(15, 30, 45),
         Text = Color3.fromRGB(220, 240, 255),
         SubText = Color3.fromRGB(140, 180, 220),
         Accent = Color3.fromRGB(0, 180, 220),
@@ -73,6 +72,7 @@ NovaUI.Themes = {
         Background = Color3.fromRGB(30, 15, 20),
         Card = Color3.fromRGB(45, 25, 35),
         TitleBar = Color3.fromRGB(40, 20, 30),
+        Sidebar = Color3.fromRGB(35, 18, 25),
         Text = Color3.fromRGB(255, 240, 230),
         SubText = Color3.fromRGB(200, 160, 160),
         Accent = Color3.fromRGB(255, 120, 80),
@@ -86,6 +86,7 @@ NovaUI.Themes = {
         Background = Color3.fromRGB(15, 25, 18),
         Card = Color3.fromRGB(25, 40, 30),
         TitleBar = Color3.fromRGB(20, 35, 25),
+        Sidebar = Color3.fromRGB(18, 30, 22),
         Text = Color3.fromRGB(230, 255, 235),
         SubText = Color3.fromRGB(160, 200, 170),
         Accent = Color3.fromRGB(80, 200, 120),
@@ -99,6 +100,7 @@ NovaUI.Themes = {
         Background = Color3.fromRGB(20, 12, 35),
         Card = Color3.fromRGB(35, 20, 55),
         TitleBar = Color3.fromRGB(30, 15, 50),
+        Sidebar = Color3.fromRGB(25, 15, 45),
         Text = Color3.fromRGB(240, 230, 255),
         SubText = Color3.fromRGB(180, 160, 220),
         Accent = Color3.fromRGB(180, 100, 255),
@@ -112,6 +114,7 @@ NovaUI.Themes = {
         Background = Color3.fromRGB(8, 8, 15),
         Card = Color3.fromRGB(15, 15, 25),
         TitleBar = Color3.fromRGB(12, 12, 22),
+        Sidebar = Color3.fromRGB(10, 10, 20),
         Text = Color3.fromRGB(255, 255, 255),
         SubText = Color3.fromRGB(150, 150, 180),
         Accent = Color3.fromRGB(255, 100, 150),
@@ -125,6 +128,7 @@ NovaUI.Themes = {
         Background = Color3.fromRGB(10, 5, 20),
         Card = Color3.fromRGB(20, 10, 35),
         TitleBar = Color3.fromRGB(15, 5, 25),
+        Sidebar = Color3.fromRGB(12, 8, 30),
         Text = Color3.fromRGB(0, 255, 200),
         SubText = Color3.fromRGB(255, 50, 150),
         Accent = Color3.fromRGB(255, 0, 150),
@@ -138,6 +142,7 @@ NovaUI.Themes = {
         Background = Color3.fromRGB(5, 5, 15),
         Card = Color3.fromRGB(15, 15, 30),
         TitleBar = Color3.fromRGB(10, 10, 20),
+        Sidebar = Color3.fromRGB(8, 8, 25),
         Text = Color3.fromRGB(0, 255, 255),
         SubText = Color3.fromRGB(150, 255, 255),
         Accent = Color3.fromRGB(0, 255, 255),
@@ -151,6 +156,7 @@ NovaUI.Themes = {
         Background = Color3.fromRGB(15, 5, 5),
         Card = Color3.fromRGB(30, 10, 10),
         TitleBar = Color3.fromRGB(20, 5, 5),
+        Sidebar = Color3.fromRGB(18, 8, 8),
         Text = Color3.fromRGB(255, 220, 220),
         SubText = Color3.fromRGB(220, 150, 150),
         Accent = Color3.fromRGB(255, 0, 0),
@@ -164,6 +170,7 @@ NovaUI.Themes = {
         Background = Color3.fromRGB(220, 235, 250),
         Card = Color3.fromRGB(255, 255, 255),
         TitleBar = Color3.fromRGB(200, 220, 240),
+        Sidebar = Color3.fromRGB(235, 245, 255),
         Text = Color3.fromRGB(20, 40, 80),
         SubText = Color3.fromRGB(80, 120, 160),
         Accent = Color3.fromRGB(50, 150, 250),
@@ -177,6 +184,7 @@ NovaUI.Themes = {
         Background = Color3.fromRGB(25, 20, 10),
         Card = Color3.fromRGB(40, 30, 15),
         TitleBar = Color3.fromRGB(30, 25, 12),
+        Sidebar = Color3.fromRGB(28, 22, 12),
         Text = Color3.fromRGB(255, 240, 200),
         SubText = Color3.fromRGB(220, 180, 120),
         Accent = Color3.fromRGB(255, 200, 50),
@@ -191,7 +199,6 @@ NovaUI.Themes = {
 NovaUI.CurrentTheme = "Dark"
 NovaUI.Theme = NovaUI.Themes.Dark
 
--- أدوات
 local function Create(class, props, parent)
     local obj = Instance.new(class)
     for k, v in pairs(props or {}) do
@@ -223,9 +230,7 @@ local function Tween(obj, time, props)
     return tween
 end
 
--- ═══════════════════════════════════════════════════════════════════════
--- Boot Screen (صغير مثل Rayfield)
--- ═══════════════════════════════════════════════════════════════════════
+-- Boot Screen
 function NovaUI:CreateBootScreen(opts)
     opts = opts or {}
     local title = opts.Title or "NovaUI"
@@ -246,34 +251,34 @@ function NovaUI:CreateBootScreen(opts)
     }, gui)
 
     local main = Create("Frame", {
-        Size = UDim2.new(0, 300, 0, 150),
-        Position = UDim2.new(0.5, -150, 0.5, -75),
+        Size = UDim2.new(0, 320, 0, 160),
+        Position = UDim2.new(0.5, -160, 0.5, -80),
         BackgroundColor3 = NovaUI.Theme.Background,
         BorderSizePixel = 0,
     }, gui)
-    Corner(main, 16)
+    Corner(main, 14)
     Stroke(main, NovaUI.Theme.Accent, 1.5, 0.3)
 
     local logo = Create("Frame", {
-        Size = UDim2.new(0, 45, 0, 45),
-        Position = UDim2.new(0.5, -22, 0, 15),
+        Size = UDim2.new(0, 50, 0, 50),
+        Position = UDim2.new(0.5, -25, 0, 15),
         BackgroundColor3 = NovaUI.Theme.Accent,
         BorderSizePixel = 0,
     }, main)
-    Corner(logo, 12)
+    Corner(logo, 14)
 
     Create("TextLabel", {
         Size = UDim2.new(1, 0, 1, 0),
         BackgroundTransparency = 1,
         Text = "N",
         TextColor3 = Color3.fromRGB(255, 255, 255),
-        TextSize = 24,
+        TextSize = 26,
         Font = Enum.Font.GothamBlack,
     }, logo)
 
     Create("TextLabel", {
         Size = UDim2.new(1, 0, 0, 25),
-        Position = UDim2.new(0, 0, 0, 65),
+        Position = UDim2.new(0, 0, 0, 70),
         BackgroundTransparency = 1,
         Text = title,
         TextColor3 = NovaUI.Theme.Text,
@@ -283,7 +288,7 @@ function NovaUI:CreateBootScreen(opts)
 
     local subLabel = Create("TextLabel", {
         Size = UDim2.new(1, 0, 0, 20),
-        Position = UDim2.new(0, 0, 0, 88),
+        Position = UDim2.new(0, 0, 0, 92),
         BackgroundTransparency = 1,
         Text = subtitle,
         TextColor3 = NovaUI.Theme.SubText,
@@ -293,7 +298,7 @@ function NovaUI:CreateBootScreen(opts)
 
     local barBg = Create("Frame", {
         Size = UDim2.new(1, -40, 0, 4),
-        Position = UDim2.new(0, 20, 0, 115),
+        Position = UDim2.new(0, 20, 0, 122),
         BackgroundColor3 = Color3.fromRGB(40, 40, 55),
         BorderSizePixel = 0,
     }, main)
@@ -309,7 +314,7 @@ function NovaUI:CreateBootScreen(opts)
     Tween(bar, duration, {Size = UDim2.new(1, 0, 1, 0)})
 
     task.spawn(function()
-        local steps = {"Loading...", "Preparing...", "Ready!"}
+        local steps = {"Initializing...", "Loading modules...", "Ready!"}
         for i, s in ipairs(steps) do
             subLabel.Text = s
             task.wait(duration / #steps)
@@ -329,9 +334,7 @@ function NovaUI:CreateBootScreen(opts)
     end)
 end
 
--- ═══════════════════════════════════════════════════════════════════════
 -- Notifications
--- ═══════════════════════════════════════════════════════════════════════
 function NovaUI:Notify(options)
     options = options or {}
     local title = options.Title or "Notification"
@@ -421,9 +424,7 @@ function NovaUI:Notify(options)
     end)
 end
 
--- ═══════════════════════════════════════════════════════════════════════
--- CreateWindow
--- ═══════════════════════════════════════════════════════════════════════
+-- CreateWindow (مع Sidebar)
 function NovaUI:CreateWindow(options)
     options = options or {}
 
@@ -432,7 +433,6 @@ function NovaUI:CreateWindow(options)
         self.Theme = self.Themes[options.Theme]
     end
 
-    -- Boot ذكي
     if NovaUI.Config.ShowBootScreen and not NovaUI._hasBooted then
         NovaUI._hasBooted = true
         self:CreateBootScreen({
@@ -468,69 +468,98 @@ function NovaUI:CreateWindow(options)
     Corner(main, 16)
     Stroke(main, self.Theme.Accent, 2, 0.4)
 
-    -- Title Bar
-    local titleBar = Create("Frame", {
-        Size = UDim2.new(1, 0, 0, 48),
-        BackgroundColor3 = self.Theme.TitleBar,
+    -- Sidebar
+    local sidebar = Create("Frame", {
+        Size = UDim2.new(0, 145, 1, -20),
+        Position = UDim2.new(0, 10, 0, 10),
+        BackgroundColor3 = self.Theme.Sidebar,
         BackgroundTransparency = 0.2,
         BorderSizePixel = 0,
         ZIndex = 2,
     }, main)
-    Corner(titleBar, 16)
+    Corner(sidebar, 12)
+    window.Sidebar = sidebar
 
+    -- Logo
     local logoFrame = Create("Frame", {
-        Size = UDim2.new(0, 30, 0, 30),
-        Position = UDim2.new(0, 12, 0.5, -15),
+        Size = UDim2.new(0, 38, 0, 38),
+        Position = UDim2.new(0, 12, 0, 12),
         BackgroundColor3 = self.Theme.Accent,
         BorderSizePixel = 0,
         ZIndex = 3,
-    }, titleBar)
-    Corner(logoFrame, 8)
+    }, sidebar)
+    Corner(logoFrame, 10)
 
     Create("TextLabel", {
         Size = UDim2.new(1, 0, 1, 0),
         BackgroundTransparency = 1,
         Text = "N",
         TextColor3 = Color3.fromRGB(255, 255, 255),
-        TextSize = 16,
+        TextSize = 18,
         Font = Enum.Font.GothamBlack,
         ZIndex = 4,
     }, logoFrame)
 
     Create("TextLabel", {
-        Size = UDim2.new(1, -180, 1, 0),
-        Position = UDim2.new(0, 50, 0, 0),
+        Size = UDim2.new(1, -60, 0, 38),
+        Position = UDim2.new(0, 58, 0, 12),
         BackgroundTransparency = 1,
         Text = options.Name or "NovaUI",
         TextColor3 = self.Theme.Text,
-        TextSize = 15,
+        TextSize = 13,
         Font = Enum.Font.GothamBold,
         TextXAlignment = Enum.TextXAlignment.Left,
+        TextTruncate = Enum.TextTruncate.AtEnd,
         ZIndex = 3,
-    }, titleBar)
+    }, sidebar)
 
-    -- أزرار التحكم (شكل مربع ناعم)
+    -- Tabs Container
+    local tabsContainer = Create("Frame", {
+        Size = UDim2.new(1, -20, 1, -70),
+        Position = UDim2.new(0, 10, 0, 60),
+        BackgroundTransparency = 1,
+        ZIndex = 3,
+    }, sidebar)
+
+    Create("UIListLayout", {
+        FillDirection = Enum.FillDirection.Vertical,
+        Padding = UDim.new(0, 5),
+        SortOrder = Enum.SortOrder.LayoutOrder,
+    }, tabsContainer)
+    window.TabsContainer = tabsContainer
+
+    -- Title Bar (يمين)
+    local titleBar = Create("Frame", {
+        Size = UDim2.new(1, -165, 0, 40),
+        Position = UDim2.new(0, 165, 0, 10),
+        BackgroundColor3 = self.Theme.TitleBar,
+        BackgroundTransparency = 0.3,
+        BorderSizePixel = 0,
+        ZIndex = 2,
+    }, main)
+    Corner(titleBar, 10)
+
+    -- أزرار التحكم
     local function makeControlBtn(text, xOffset, bgColor, textColor)
         local btn = Create("TextButton", {
-            Size = UDim2.new(0, 30, 0, 30),
-            Position = UDim2.new(1, xOffset, 0.5, -15),
+            Size = UDim2.new(0, 28, 0, 28),
+            Position = UDim2.new(1, xOffset, 0.5, -14),
             BackgroundColor3 = bgColor,
             Text = text,
             TextColor3 = textColor,
-            TextSize = 14,
+            TextSize = 12,
             Font = Enum.Font.GothamBold,
             ZIndex = 3,
             AutoButtonColor = false,
         }, titleBar)
-        Corner(btn, 8)
+        Corner(btn, 7)
         return btn
     end
 
-    local themeBtn = makeControlBtn("🎨", -80, self.Theme.Card, self.Theme.Text)
-    local minBtn = makeControlBtn("—", -45, self.Theme.Card, self.Theme.SubText)
-    local closeBtn = makeControlBtn("✕", -10, self.Theme.Danger, Color3.fromRGB(255,255,255))
+    local themeBtn = makeControlBtn("🎨", -70, self.Theme.Card, self.Theme.Text)
+    local minBtn = makeControlBtn("—", -38, self.Theme.Card, self.Theme.SubText)
+    local closeBtn = makeControlBtn("✕", -6, self.Theme.Danger, Color3.fromRGB(255,255,255))
 
-    -- تأثير الضغط (يكبر شوي)
     local function addPressEffect(btn, originalSize)
         btn.MouseButton1Down:Connect(function()
             Tween(btn, 0.1, {Size = UDim2.new(originalSize.X.Scale, originalSize.X.Offset * 0.9,
@@ -549,6 +578,17 @@ function NovaUI:CreateWindow(options)
     addPressEffect(closeBtn, closeBtn.Size)
 
     closeBtn.MouseButton1Click:Connect(function() gui:Destroy() end)
+
+    -- Minimize
+    local minimized = false
+    minBtn.MouseButton1Click:Connect(function()
+        minimized = not minimized
+        if minimized then
+            Tween(main, 0.3, {Size = UDim2.new(main.Size.X.Scale, main.Size.X.Offset, 0, 45)})
+        else
+            Tween(main, 0.3, {Size = winSize})
+        end
+    end)
 
     -- Drag
     local dragging, dragStart, startPos
@@ -577,24 +617,10 @@ function NovaUI:CreateWindow(options)
         end
     end)
 
-    -- Tabs
-    local tabsContainer = Create("Frame", {
-        Size = UDim2.new(1, -20, 0, 36),
-        Position = UDim2.new(0, 10, 0, 56),
-        BackgroundTransparency = 1,
-        ZIndex = 2,
-    }, main)
-
-    Create("UIListLayout", {
-        FillDirection = Enum.FillDirection.Horizontal,
-        Padding = UDim.new(0, 6),
-    }, tabsContainer)
-    window.TabsContainer = tabsContainer
-
     -- Content
     local content = Create("Frame", {
-        Size = UDim2.new(1, -20, 1, -105),
-        Position = UDim2.new(0, 10, 0, 98),
+        Size = UDim2.new(1, -175, 1, -70),
+        Position = UDim2.new(0, 165, 0, 58),
         BackgroundColor3 = self.Theme.Card,
         BackgroundTransparency = 0.4,
         BorderSizePixel = 0,
@@ -606,7 +632,7 @@ function NovaUI:CreateWindow(options)
     -- Theme Menu
     local themeMenu = Create("Frame", {
         Size = UDim2.new(0, 180, 0, 260),
-        Position = UDim2.new(1, -190, 0, 52),
+        Position = UDim2.new(1, -190, 0, 55),
         BackgroundColor3 = self.Theme.Card,
         BorderSizePixel = 0,
         Visible = false,
@@ -652,7 +678,6 @@ function NovaUI:CreateWindow(options)
     return window
 end
 
--- SetTheme
 function NovaUI:SetTheme(name)
     if not self.Themes[name] then return end
     self.CurrentTheme = name
@@ -660,23 +685,28 @@ function NovaUI:SetTheme(name)
     self:Notify({Title = "Theme", Text = "Applied: " .. name, Type = "success"})
 end
 
--- ═══════════════════════════════════════════════════════════════════════
--- CreateTab
--- ═══════════════════════════════════════════════════════════════════════
-function NovaUI:CreateTab(window, name)
+-- CreateTab (Sidebar)
+function NovaUI:CreateTab(window, name, icon)
     local tab = {Name = name, Window = window}
 
     local btn = Create("TextButton", {
-        Size = UDim2.new(0, 100, 1, 0),
+        Size = UDim2.new(1, 0, 0, 35),
         BackgroundColor3 = self.Theme.Background,
-        Text = name,
+        BackgroundTransparency = 0.7,
+        Text = (icon and (icon .. "  ") or "") .. name,
         TextColor3 = self.Theme.SubText,
-        TextSize = 13,
+        TextSize = 12,
         Font = Enum.Font.GothamBold,
+        TextXAlignment = Enum.TextXAlignment.Left,
         ZIndex = 3,
         AutoButtonColor = false,
     }, window.TabsContainer)
     Corner(btn, 8)
+
+    local pad = Create("UIPadding", {
+        PaddingLeft = UDim.new(0, 10),
+    }, btn)
+
     tab.Button = btn
 
     local page = Create("ScrollingFrame", {
@@ -699,10 +729,12 @@ function NovaUI:CreateTab(window, name)
         for _, t in pairs(window.Tabs) do
             t.Page.Visible = false
             t.Button.BackgroundColor3 = self.Theme.Background
+            t.Button.BackgroundTransparency = 0.7
             t.Button.TextColor3 = self.Theme.SubText
         end
         page.Visible = true
         btn.BackgroundColor3 = self.Theme.Accent
+        btn.BackgroundTransparency = 0
         btn.TextColor3 = self.Theme.Text
         window.CurrentTab = tab
     end)
@@ -711,6 +743,7 @@ function NovaUI:CreateTab(window, name)
     if #window.Tabs == 1 then
         page.Visible = true
         btn.BackgroundColor3 = self.Theme.Accent
+        btn.BackgroundTransparency = 0
         btn.TextColor3 = self.Theme.Text
         window.CurrentTab = tab
     end
@@ -718,9 +751,6 @@ function NovaUI:CreateTab(window, name)
     return tab
 end
 
--- ═══════════════════════════════════════════════════════════════════════
--- CreateSection
--- ═══════════════════════════════════════════════════════════════════════
 function NovaUI:CreateSection(tab, name)
     local section = {Name = name, Tab = tab}
     Create("TextLabel", {
@@ -735,15 +765,12 @@ function NovaUI:CreateSection(tab, name)
     return section
 end
 
--- ═══════════════════════════════════════════════════════════════════════
--- CreateButton
--- ═══════════════════════════════════════════════════════════════════════
 function NovaUI:CreateButton(section, options)
     local name = options.Name or "Button"
     local callback = options.Callback or function() end
 
     local btn = Create("TextButton", {
-        Size = UDim2.new(1, 0, 0, 42),
+        Size = UDim2.new(1, 0, 0, 40),
         BackgroundColor3 = self.Theme.Accent,
         Text = name,
         TextColor3 = Color3.fromRGB(255, 255, 255),
@@ -761,24 +788,20 @@ function NovaUI:CreateButton(section, options)
         Tween(btn, 0.2, {BackgroundColor3 = self.Theme.Accent})
     end)
 
-    -- تأثير الضغط
     btn.MouseButton1Down:Connect(function()
-        Tween(btn, 0.1, {Size = UDim2.new(0.97, 0, 0.95, 0)})
+        Tween(btn, 0.1, {Size = UDim2.new(0.98, 0, 0.9, 0)})
     end)
     btn.MouseButton1Up:Connect(function()
-        Tween(btn, 0.1, {Size = UDim2.new(1, 0, 0, 42)})
+        Tween(btn, 0.1, {Size = UDim2.new(1, 0, 0, 40)})
     end)
     btn.MouseLeave:Connect(function()
-        Tween(btn, 0.1, {Size = UDim2.new(1, 0, 0, 42)})
+        Tween(btn, 0.1, {Size = UDim2.new(1, 0, 0, 40)})
     end)
 
     btn.MouseButton1Click:Connect(callback)
     return btn
 end
 
--- ═══════════════════════════════════════════════════════════════════════
--- CreateToggle
--- ═══════════════════════════════════════════════════════════════════════
 function NovaUI:CreateToggle(section, options)
     local name = options.Name or "Toggle"
     local default = options.CurrentValue or false
@@ -786,7 +809,7 @@ function NovaUI:CreateToggle(section, options)
     local value = default
 
     local frame = Create("Frame", {
-        Size = UDim2.new(1, 0, 0, 42),
+        Size = UDim2.new(1, 0, 0, 40),
         BackgroundColor3 = self.Theme.Background,
         BorderSizePixel = 0,
     }, section.Tab.Page)
@@ -804,25 +827,25 @@ function NovaUI:CreateToggle(section, options)
     }, frame)
 
     local toggle = Create("TextButton", {
-        Size = UDim2.new(0, 50, 0, 26),
-        Position = UDim2.new(0, 15, 0.5, -13),
+        Size = UDim2.new(0, 48, 0, 24),
+        Position = UDim2.new(0, 15, 0.5, -12),
         BackgroundColor3 = value and self.Theme.Accent or Color3.fromRGB(60, 60, 75),
         Text = "",
         AutoButtonColor = false,
     }, frame)
-    Corner(toggle, 13)
+    Corner(toggle, 12)
 
     local knob = Create("Frame", {
-        Size = UDim2.new(0, 20, 0, 20),
-        Position = value and UDim2.new(1, -23, 0, 3) or UDim2.new(0, 3, 0, 3),
+        Size = UDim2.new(0, 18, 0, 18),
+        Position = value and UDim2.new(1, -21, 0, 3) or UDim2.new(0, 3, 0, 3),
         BackgroundColor3 = Color3.fromRGB(255, 255, 255),
     }, toggle)
-    Corner(knob, 10)
+    Corner(knob, 9)
 
     toggle.MouseButton1Click:Connect(function()
         value = not value
         Tween(toggle, 0.2, {BackgroundColor3 = value and self.Theme.Accent or Color3.fromRGB(60, 60, 75)})
-        Tween(knob, 0.2, {Position = value and UDim2.new(1, -23, 0, 3) or UDim2.new(0, 3, 0, 3)})
+        Tween(knob, 0.2, {Position = value and UDim2.new(1, -21, 0, 3) or UDim2.new(0, 3, 0, 3)})
         callback(value)
     end)
 
@@ -830,15 +853,12 @@ function NovaUI:CreateToggle(section, options)
         Set = function(v)
             value = v
             toggle.BackgroundColor3 = value and self.Theme.Accent or Color3.fromRGB(60, 60, 75)
-            knob.Position = value and UDim2.new(1, -23, 0, 3) or UDim2.new(0, 3, 0, 3)
+            knob.Position = value and UDim2.new(1, -21, 0, 3) or UDim2.new(0, 3, 0, 3)
         end,
         Get = function() return value end,
     }
 end
 
--- ═══════════════════════════════════════════════════════════════════════
--- CreateSlider (iOS Style)
--- ═══════════════════════════════════════════════════════════════════════
 function NovaUI:CreateSlider(section, options)
     local name = options.Name or "Slider"
     local min = options.Min or 0
@@ -848,14 +868,14 @@ function NovaUI:CreateSlider(section, options)
     local value = default
 
     local frame = Create("Frame", {
-        Size = UDim2.new(1, 0, 0, 55),
+        Size = UDim2.new(1, 0, 0, 52),
         BackgroundColor3 = self.Theme.Background,
         BorderSizePixel = 0,
     }, section.Tab.Page)
     Corner(frame, 10)
 
     Create("TextLabel", {
-        Size = UDim2.new(1, -80, 0, 25),
+        Size = UDim2.new(1, -80, 0, 22),
         Position = UDim2.new(0, 15, 0, 5),
         BackgroundTransparency = 1,
         Text = name,
@@ -866,7 +886,7 @@ function NovaUI:CreateSlider(section, options)
     }, frame)
 
     local valueLabel = Create("TextLabel", {
-        Size = UDim2.new(0, 60, 0, 25),
+        Size = UDim2.new(0, 60, 0, 22),
         Position = UDim2.new(0, 15, 0, 5),
         BackgroundTransparency = 1,
         Text = tostring(value),
@@ -876,10 +896,9 @@ function NovaUI:CreateSlider(section, options)
         TextXAlignment = Enum.TextXAlignment.Left,
     }, frame)
 
-    -- iOS Style Bar (أعلى حبة)
     local sliderBg = Create("Frame", {
         Size = UDim2.new(1, -30, 0, 8),
-        Position = UDim2.new(0, 15, 0, 36),
+        Position = UDim2.new(0, 15, 0, 34),
         BackgroundColor3 = Color3.fromRGB(45, 45, 60),
         BorderSizePixel = 0,
     }, frame)
@@ -892,22 +911,15 @@ function NovaUI:CreateSlider(section, options)
     }, sliderBg)
     Corner(fill, 4)
 
-    -- iOS Knob (دائرة أكبر)
     local knob = Create("Frame", {
-        Size = UDim2.new(0, 20, 0, 20),
+        Size = UDim2.new(0, 18, 0, 18),
         AnchorPoint = Vector2.new(0.5, 0.5),
         Position = UDim2.new((value - min) / (max - min), 0, 0.5, 0),
         BackgroundColor3 = Color3.fromRGB(255, 255, 255),
         BorderSizePixel = 0,
         ZIndex = 5,
     }, sliderBg)
-    Corner(knob, 10)
-    
-    local knobShadow = Create("UIStroke", {
-        Color = Color3.fromRGB(0, 0, 0),
-        Thickness = 1,
-        Transparency = 0.8,
-    }, knob)
+    Corner(knob, 9)
 
     local dragging = false
 
@@ -927,14 +939,12 @@ function NovaUI:CreateSlider(section, options)
             updateFromX(input.Position.X)
         end
     end)
-
     UserInputService.InputChanged:Connect(function(input)
         if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement
            or input.UserInputType == Enum.UserInputType.Touch) then
             updateFromX(input.Position.X)
         end
     end)
-
     UserInputService.InputEnded:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1
            or input.UserInputType == Enum.UserInputType.Touch then
@@ -954,9 +964,6 @@ function NovaUI:CreateSlider(section, options)
     }
 end
 
--- ═══════════════════════════════════════════════════════════════════════
--- CreateColorPicker
--- ═══════════════════════════════════════════════════════════════════════
 function NovaUI:CreateColorPicker(section, options)
     local name = options.Name or "Color"
     local default = options.Default or Color3.fromRGB(120, 80, 255)
@@ -964,7 +971,7 @@ function NovaUI:CreateColorPicker(section, options)
     local color = default
 
     local frame = Create("Frame", {
-        Size = UDim2.new(1, 0, 0, 42),
+        Size = UDim2.new(1, 0, 0, 40),
         BackgroundColor3 = self.Theme.Background,
         BorderSizePixel = 0,
     }, section.Tab.Page)
@@ -1065,17 +1072,11 @@ function NovaUI:CreateColorPicker(section, options)
     end)
 
     return {
-        Set = function(c)
-            color = c
-            swatch.BackgroundColor3 = c
-        end,
+        Set = function(c) color = c; swatch.BackgroundColor3 = c end,
         Get = function() return color end,
     }
 end
 
--- ═══════════════════════════════════════════════════════════════════════
--- CreateDropdown ⭐ جديد
--- ═══════════════════════════════════════════════════════════════════════
 function NovaUI:CreateDropdown(section, options)
     local name = options.Name or "Dropdown"
     local opts = options.Options or {}
@@ -1124,17 +1125,14 @@ function NovaUI:CreateDropdown(section, options)
         Font = Enum.Font.Gotham,
     }, frame)
 
-    -- قائمة الخيارات
     local optionsList = Create("Frame", {
         Size = UDim2.new(1, -20, 0, 0),
         Position = UDim2.new(0, 10, 0, 60),
         BackgroundTransparency = 1,
         ClipsDescendants = true,
     }, frame)
-    
-    Create("UIListLayout", {
-        Padding = UDim.new(0, 4),
-    }, optionsList)
+
+    Create("UIListLayout", {Padding = UDim.new(0, 4)}, optionsList)
 
     for _, opt in ipairs(opts) do
         local optBtn = Create("TextButton", {
@@ -1151,7 +1149,6 @@ function NovaUI:CreateDropdown(section, options)
         optBtn.MouseButton1Click:Connect(function()
             current = opt
             currentLabel.Text = tostring(opt)
-            -- إغلاق
             isOpen = false
             Tween(frame, 0.3, {Size = UDim2.new(1, 0, 0, 42)})
             arrow.Text = "▼"
@@ -1159,14 +1156,13 @@ function NovaUI:CreateDropdown(section, options)
         end)
     end
 
-    -- فتح / إغلاق
     local clickArea = Create("TextButton", {
         Size = UDim2.new(1, 0, 0, 42),
         BackgroundTransparency = 1,
         Text = "",
         ZIndex = 5,
     }, frame)
-    
+
     clickArea.MouseButton1Click:Connect(function()
         isOpen = not isOpen
         if isOpen then
@@ -1180,32 +1176,25 @@ function NovaUI:CreateDropdown(section, options)
     end)
 
     return {
-        Set = function(v)
-            current = v
-            currentLabel.Text = tostring(v)
-        end,
+        Set = function(v) current = v; currentLabel.Text = tostring(v) end,
         Get = function() return current end,
     }
 end
 
--- ═══════════════════════════════════════════════════════════════════════
--- CreateInput ⭐ جديد
--- ═══════════════════════════════════════════════════════════════════════
 function NovaUI:CreateInput(section, options)
     local name = options.Name or "Input"
     local placeholder = options.PlaceholderText or "اكتب هنا..."
     local callback = options.Callback or function() end
-    local removeAfter = options.RemoveTextAfterFocusLost or false
 
     local frame = Create("Frame", {
-        Size = UDim2.new(1, 0, 0, 70),
+        Size = UDim2.new(1, 0, 0, 65),
         BackgroundColor3 = self.Theme.Background,
         BorderSizePixel = 0,
     }, section.Tab.Page)
     Corner(frame, 10)
 
     Create("TextLabel", {
-        Size = UDim2.new(1, -30, 0, 22),
+        Size = UDim2.new(1, -30, 0, 20),
         Position = UDim2.new(0, 15, 0, 8),
         BackgroundTransparency = 1,
         Text = name,
@@ -1216,8 +1205,8 @@ function NovaUI:CreateInput(section, options)
     }, frame)
 
     local inputFrame = Create("Frame", {
-        Size = UDim2.new(1, -30, 0, 32),
-        Position = UDim2.new(0, 15, 0, 32),
+        Size = UDim2.new(1, -30, 0, 30),
+        Position = UDim2.new(0, 15, 0, 30),
         BackgroundColor3 = Color3.fromRGB(15, 15, 25),
         BorderSizePixel = 0,
     }, frame)
@@ -1238,11 +1227,8 @@ function NovaUI:CreateInput(section, options)
         ClearTextOnFocus = false,
     }, inputFrame)
 
-    textbox.FocusLost:Connect(function(enterPressed)
-        callback(textbox.Text, enterPressed)
-        if removeAfter then
-            textbox.Text = ""
-        end
+    textbox.FocusLost:Connect(function(enter)
+        callback(textbox.Text, enter)
     end)
 
     return {
@@ -1251,9 +1237,6 @@ function NovaUI:CreateInput(section, options)
     }
 end
 
--- ═══════════════════════════════════════════════════════════════════════
--- CreateKeybind ⭐ جديد
--- ═══════════════════════════════════════════════════════════════════════
 function NovaUI:CreateKeybind(section, options)
     local name = options.Name or "Keybind"
     local default = options.CurrentKeybind or "F"
@@ -1262,7 +1245,7 @@ function NovaUI:CreateKeybind(section, options)
     local checking = false
 
     local frame = Create("Frame", {
-        Size = UDim2.new(1, 0, 0, 42),
+        Size = UDim2.new(1, 0, 0, 40),
         BackgroundColor3 = self.Theme.Background,
         BorderSizePixel = 0,
     }, section.Tab.Page)
@@ -1280,8 +1263,8 @@ function NovaUI:CreateKeybind(section, options)
     }, frame)
 
     local keyFrame = Create("Frame", {
-        Size = UDim2.new(0, 65, 0, 28),
-        Position = UDim2.new(0, 12, 0.5, -14),
+        Size = UDim2.new(0, 65, 0, 26),
+        Position = UDim2.new(0, 12, 0.5, -13),
         BackgroundColor3 = Color3.fromRGB(15, 15, 25),
         BorderSizePixel = 0,
     }, frame)
@@ -1321,20 +1304,14 @@ function NovaUI:CreateKeybind(section, options)
     end)
 
     return {
-        Set = function(k)
-            current = k
-            keyLabel.Text = k
-        end,
+        Set = function(k) current = k; keyLabel.Text = k end,
         Get = function() return current end,
     }
 end
 
--- ═══════════════════════════════════════════════════════════════════════
--- CreateLabel ⭐ جديد
--- ═══════════════════════════════════════════════════════════════════════
 function NovaUI:CreateLabel(section, text)
-    local label = Create("TextLabel", {
-        Size = UDim2.new(1, 0, 0, 30),
+    return Create("TextLabel", {
+        Size = UDim2.new(1, 0, 0, 28),
         BackgroundTransparency = 1,
         Text = text,
         TextColor3 = self.Theme.Text,
@@ -1342,25 +1319,21 @@ function NovaUI:CreateLabel(section, text)
         Font = Enum.Font.Gotham,
         TextXAlignment = Enum.TextXAlignment.Right,
     }, section.Tab.Page)
-    return label
 end
 
--- ═══════════════════════════════════════════════════════════════════════
--- CreateParagraph ⭐ جديد
--- ═══════════════════════════════════════════════════════════════════════
 function NovaUI:CreateParagraph(section, options)
     local title = options.Title or "Paragraph"
     local content = options.Content or ""
 
     local frame = Create("Frame", {
-        Size = UDim2.new(1, 0, 0, 80),
+        Size = UDim2.new(1, 0, 0, 75),
         BackgroundColor3 = self.Theme.Background,
         BorderSizePixel = 0,
     }, section.Tab.Page)
     Corner(frame, 10)
 
     Create("TextLabel", {
-        Size = UDim2.new(1, -20, 0, 25),
+        Size = UDim2.new(1, -20, 0, 22),
         Position = UDim2.new(0, 10, 0, 8),
         BackgroundTransparency = 1,
         Text = title,
@@ -1371,8 +1344,8 @@ function NovaUI:CreateParagraph(section, options)
     }, frame)
 
     Create("TextLabel", {
-        Size = UDim2.new(1, -20, 0, 40),
-        Position = UDim2.new(0, 10, 0, 35),
+        Size = UDim2.new(1, -20, 0, 38),
+        Position = UDim2.new(0, 10, 0, 32),
         BackgroundTransparency = 1,
         Text = content,
         TextColor3 = self.Theme.SubText,
@@ -1385,18 +1358,13 @@ function NovaUI:CreateParagraph(section, options)
     return frame
 end
 
--- ═══════════════════════════════════════════════════════════════════════
--- CreateDivider ⭐ جديد
--- ═══════════════════════════════════════════════════════════════════════
 function NovaUI:CreateDivider(section)
-    local line = Create("Frame", {
+    return Create("Frame", {
         Size = UDim2.new(1, -30, 0, 1),
         Position = UDim2.new(0, 15, 0, 5),
         BackgroundColor3 = self.Theme.Border,
         BorderSizePixel = 0,
     }, section.Tab.Page)
-    return line
 end
 
--- ═══════════════════════════════════════════════════════════════════════
 return NovaUI
